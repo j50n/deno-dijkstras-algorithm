@@ -31,7 +31,7 @@ Deno.test("demonstrate finding shortest path", () => {
 
 Deno.test("demonstrate finding the weight of the shortest path", () => {
   assertEquals(
-    cafes.calculateFor(FULLSTACK).totalWeight(CAFEGRUMPY),
+    cafes.calculateFor(FULLSTACK).weightOfPathTo(CAFEGRUMPY),
     14,
     "weight of the shortest path",
   );

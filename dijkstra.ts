@@ -224,7 +224,7 @@ export class ShortestPaths {
    * Total weight of the path from the start node to the given end node.
    * @param endNode The end node.
    */
-  totalWeight(endNode: number): number {
+  weightOfPathTo(endNode: number): number {
     if (endNode < 0 || endNode >= this.nodes) {
       throw new RangeError(
         `end-node must be in range 0 to ${this.nodes - 1}: ${endNode}`,

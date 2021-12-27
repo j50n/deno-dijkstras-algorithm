@@ -18,7 +18,7 @@ Deno.test("some paths are valid, others are not", () => {
   const shortestPath = solver.calculateFor(0);
   assertThrows(() => shortestPath.shortestPathTo(1), Error);
   assertEquals(shortestPath.shortestPathTo(2), [0, 2]);
-  assertEquals(shortestPath.totalWeight(2), 42);
+  assertEquals(shortestPath.weightOfPathTo(2), 42);
 });
 
 Deno.test("finds shortest path between two nodes", () => {
@@ -27,5 +27,5 @@ Deno.test("finds shortest path between two nodes", () => {
 
   const shortestPath = solver.calculateFor(0);
   assertEquals(shortestPath.shortestPathTo(1), [0, 1]);
-  assertEquals(shortestPath.totalWeight(1), 1);
+  assertEquals(shortestPath.weightOfPathTo(1), 1);
 });
