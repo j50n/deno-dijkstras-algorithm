@@ -8,7 +8,7 @@ numbered indexes for nodes, rather than string labels or objects, was by design.
 This reduced the memory footprint needed for the graph and speeds up graph
 creation and lookups.
 
-This code was adapted to Typescript/Deno from
+This code was adapted from Typescript/Deno from
 [A Walkthrough of Dijkstra's Algorithm (In JavaScript!)](https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026)
 on Medium. This code was originally part of
 [BlackholeSuns](https://github.com/j50n/blackholesuns), an open source project
