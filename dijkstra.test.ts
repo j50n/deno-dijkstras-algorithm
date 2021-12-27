@@ -1,38 +1,31 @@
 import { DijkstraShortestPathSolver } from "./dijkstra.ts";
-import { assertEquals } from "./deps.ts";
+import { assertEquals, assertThrows } from "./deps.ts";
 
-const FULLSTACK = 0;
-const DIGINN = 1;
-const DUBLINER = 2;
-const STARBUCKS = 3;
-const CAFEGRUMPY = 4;
-const INSOMNIACOOKIES = 5;
-
-const cafes = DijkstraShortestPathSolver.init(6);
-
-cafes.addBidirEdge(DIGINN, FULLSTACK, 7);
-cafes.addBidirEdge(FULLSTACK, STARBUCKS, 6);
-cafes.addBidirEdge(DIGINN, DUBLINER, 4);
-cafes.addBidirEdge(FULLSTACK, DUBLINER, 2);
-cafes.addBidirEdge(DUBLINER, STARBUCKS, 3);
-cafes.addBidirEdge(DIGINN, CAFEGRUMPY, 9);
-cafes.addBidirEdge(CAFEGRUMPY, INSOMNIACOOKIES, 5);
-cafes.addBidirEdge(DUBLINER, INSOMNIACOOKIES, 7);
-cafes.addBidirEdge(STARBUCKS, INSOMNIACOOKIES, 6);
-
-Deno.test("demonstrate finding shortest path", () => {
-  const path = cafes.calculateFor(FULLSTACK).shortestPathTo(CAFEGRUMPY);
-  assertEquals(
-    path,
-    [FULLSTACK, DUBLINER, INSOMNIACOOKIES, CAFEGRUMPY],
-    "shortest path from FULLSTACK to CAFEGRUMPY",
-  );
+Deno.test("graph contains at least 2 nodes", () => {
+  assertThrows(() => DijkstraShortestPathSolver.init(1), RangeError);
 });
 
-Deno.test("demonstrate finding the weight of the shortest path", () => {
-  assertEquals(
-    cafes.calculateFor(FULLSTACK).weights[CAFEGRUMPY],
-    14,
-    "weight of the shortest path",
-  );
+Deno.test("throws if no path found", () => {
+  const solver = DijkstraShortestPathSolver.init(2);
+  const shortestPath = solver.calculateFor(0);
+  assertThrows(() => shortestPath.shortestPathTo(1), Error);
+});
+
+Deno.test("some paths are valid, others are not", () => {
+  const solver = DijkstraShortestPathSolver.init(3);
+  solver.addEdge(0, 2, 42);
+
+  const shortestPath = solver.calculateFor(0);
+  assertThrows(() => shortestPath.shortestPathTo(1), Error);
+  assertEquals(shortestPath.shortestPathTo(2), [0, 2]);
+  assertEquals(shortestPath.totalWeight(2), 42);
+});
+
+Deno.test("finds shortest path between two nodes", () => {
+  const solver = DijkstraShortestPathSolver.init(2);
+  solver.addEdge(0, 1, 1);
+
+  const shortestPath = solver.calculateFor(0);
+  assertEquals(shortestPath.shortestPathTo(1), [0, 1]);
+  assertEquals(shortestPath.totalWeight(1), 1);
 });

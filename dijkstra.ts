@@ -22,6 +22,10 @@ interface IPath {
  *
  * Nodes are numbered from 0 to n-1.
  *
+ * This supports having a template graph and adding variable nodes for processing with {@link DijkstraShortestPathSolver.clone}
+ * and {@link DijkstraShortestPathSolver.addNode}. This operations are additive. There is not a good general way to remove nodes
+ * and edges (subtractive) once they have been added.
+ *
  * Adapted from https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026
  * This has been made much faster by treating nodes as an index rather than a string (name). We use `tinyqueue`
  * as our priority queue. All map-likes have been eliminated, but there are still object references. So this is
@@ -39,6 +43,10 @@ export class DijkstraShortestPathSolver {
    * @returns A new solver.
    */
   static init(nodes: number): DijkstraShortestPathSolver {
+    if (nodes < 2) {
+      throw new RangeError(`solver requires at least 2 nodes: ${nodes}`);
+    }
+
     return new DijkstraShortestPathSolver(
       new Array(nodes).fill(null).map((_v) => new Array(0)),
     );
@@ -46,7 +54,12 @@ export class DijkstraShortestPathSolver {
 
   /**
    * A clone of this solver.
+   *
+   * This clone operation is generally very fast, as it is based on array shallow copies.
+   *
    * @returns A cloned solver.
+   *
+   * @see {@link DijkstraShortestPathSolver.addNode}
    */
   clone(): DijkstraShortestPathSolver {
     return new DijkstraShortestPathSolver(
@@ -59,6 +72,23 @@ export class DijkstraShortestPathSolver {
    */
   protected get nodes(): number {
     return this.adjacencyList.length;
+  }
+
+  /**
+   * Add a new node to the graph.
+   *
+   * The typical use case for this is when you have a static graph and you need to add a small number
+   * of additional nodes and edges prior to each compute. You would clone the solver, add your variable
+   * nodes and edges, and then solve, saving you the time of having to recreate the whole graph from
+   * scratch each time.
+   *
+   * @returns The index of the new node.
+   *
+   * @see {@link DijkstraShortestPathSolver.clone}
+   */
+  addNode(): number {
+    this.adjacencyList.push(new Array(0));
+    return this.nodes - 1;
   }
 
   /**
@@ -135,12 +165,10 @@ export class DijkstraShortestPathSolver {
 
     while (pq.length !== 0) {
       const shortestStep = pq.pop();
-      if (shortestStep === undefined) {
-        throw new Error("shortest-step undefined");
-      }
-      const currentNode = shortestStep.toNode;
 
-      this.adjacencyList[currentNode].forEach((neighbor) => {
+      const currentNode = shortestStep!.toNode;
+
+      for (const neighbor of this.adjacencyList[currentNode]) {
         const weight = weights[currentNode] + neighbor.weight;
 
         if (weight < weights[neighbor.toNode]) {
@@ -148,10 +176,10 @@ export class DijkstraShortestPathSolver {
           backtrace[neighbor.toNode] = currentNode;
           pq.push({ toNode: neighbor.toNode, weight: weight });
         }
-      });
+      }
     }
 
-    return new ShortestPaths(startNode, backtrace, weights);
+    return new ShortestPaths(this.nodes, startNode, backtrace, weights);
   }
 }
 
@@ -160,22 +188,33 @@ export class DijkstraShortestPathSolver {
  */
 export class ShortestPaths {
   constructor(
+    public readonly nodes: number,
     public readonly startNode: number,
-    public readonly backtrace: number[],
-    public readonly weights: number[],
+    private readonly backtrace: number[],
+    private readonly weights: number[],
   ) {}
 
   /**
    * Find the shortest path to the given end node.
    * @param endNode The end node.
+   * @throws {@link Error} No path found.
    */
   shortestPathTo(endNode: number): number[] {
+    if (endNode < 0 || endNode >= this.nodes) {
+      throw new RangeError(
+        `end-node must be in range 0 to ${this.nodes - 1}: ${endNode}`,
+      );
+    }
+
     const path = [endNode];
     let lastStep = endNode;
 
     while (lastStep != this.startNode) {
       path.unshift(this.backtrace[lastStep]);
       lastStep = this.backtrace[lastStep];
+      if (lastStep === undefined) {
+        throw new Error(`no path from ${this.startNode} to ${endNode}`);
+      }
     }
 
     return path;
@@ -186,6 +225,12 @@ export class ShortestPaths {
    * @param endNode The end node.
    */
   totalWeight(endNode: number): number {
+    if (endNode < 0 || endNode >= this.nodes) {
+      throw new RangeError(
+        `end-node must be in range 0 to ${this.nodes - 1}: ${endNode}`,
+      );
+    }
+
     return this.weights[endNode];
   }
 }

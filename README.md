@@ -1,12 +1,9 @@
 # Dijkstra's Shortest Path Algorithm
 
-A pretty good implementation of Dijkstra's shortest-path algorithm.
+A pretty good implementation of Dijkstra's shortest-path algorithm for Deno.
 
-This implementation is designed to process large in-memory graphs. It will
-perform reasonably well even when the number of edges is in the millions. Using
-numbered indexes for nodes, rather than string labels or objects, was by design.
-This reduced the memory footprint needed for the graph and speeds up graph
-creation and lookups.
+This implementation is able to process large in-memory graphs. It will
+perform reasonably well even when the number of edges is in the millions. 
 
 This code was adapted from Typescript/Deno from
 [A Walkthrough of Dijkstra's Algorithm (In JavaScript!)](https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026)
