@@ -29,8 +29,7 @@ interface IPath {
  */
 export class DijkstraShortestPathSolver {
   private constructor(
-    public readonly nodes: number,
-    public readonly adjacencyList: IEdge[][],
+    protected readonly adjacencyList: IEdge[][],
   ) {
   }
 
@@ -41,7 +40,6 @@ export class DijkstraShortestPathSolver {
    */
   static init(nodes: number): DijkstraShortestPathSolver {
     return new DijkstraShortestPathSolver(
-      nodes,
       new Array(nodes).fill(null).map((_v) => new Array(0)),
     );
   }
@@ -52,9 +50,15 @@ export class DijkstraShortestPathSolver {
    */
   clone(): DijkstraShortestPathSolver {
     return new DijkstraShortestPathSolver(
-      this.nodes,
       this.adjacencyList.map((a) => a.slice(0)),
     );
+  }
+
+  /**
+   * The number of nodes in the graph.
+   */
+  protected get nodes(): number {
+    return this.adjacencyList.length;
   }
 
   /**
