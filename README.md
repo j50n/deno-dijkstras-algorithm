@@ -28,7 +28,7 @@ This implementation supports cloning the solver and extending its graph dynamica
 
 This example recreates the example from the article referenced earlier. The
 nodes are mapped to integers from `0` to `n-1`. The names and weights are taken
-from the article.
+from [A Walkthrough of Dijkstra's Algorithm (In JavaScript!)](https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026).
 
 ```ts
 const FULLSTACK = 0;
