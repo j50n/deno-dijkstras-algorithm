@@ -7,7 +7,7 @@ If you ever run into a problem that can be represented as a graph where the solu
 This implementation of Dijkstra'a algorithm is able to process large in-memory graphs. It will perform
 reasonably well even when the number of edges is in the millions. The performance is `O(n*log(n))`.
 
-This code was adapted from Typescript/Deno from
+This code was adapted to Typescript from
 [A Walkthrough of Dijkstra's Algorithm (In JavaScript!)](https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026)
 on Medium. This implemetation was originally part of
 [BlackholeSuns](https://github.com/j50n/blackholesuns), an open source project
