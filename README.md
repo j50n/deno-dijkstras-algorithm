@@ -5,7 +5,7 @@ A pretty good implementation of Dijkstra's shortest-path algorithm for Deno.
 If you ever run into a problem that can be represented as a graph where the solution has something to do with finding the shortest path between nodes, this algorithm is magical. It is well worth the time to learn how to use it.
 
 This implementation of Dijkstra'a algorithm is able to process large in-memory graphs. It will perform
-reasonably well even when the number of edges is in the millions. The performance is `O(n*log(n)).
+reasonably well even when the number of edges is in the millions. The performance is `O(n*log(n))`.
 
 This code was adapted from Typescript/Deno from
 [A Walkthrough of Dijkstra's Algorithm (In JavaScript!)](https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026)
