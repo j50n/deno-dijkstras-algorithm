@@ -68,7 +68,7 @@ export class DijkstraShortestPathSolver {
   }
 
   /**
-   * The number of nodes in the graph.
+   * The number of nodes in the graph. Nodes are numbered from `0` to `n-1`.
    */
   protected get nodes(): number {
     return this.adjacencyList.length;
@@ -144,15 +144,22 @@ export class DijkstraShortestPathSolver {
     this.adjacencyList[toNode].push({ toNode: fromNode, weight });
   }
 
-  setEdges(node: number, edges: IEdge[]): void {
-    this.adjacencyList[node] = edges;
-  }
+  // TODO: Not ready for general consumption.
+  // setEdges(node: number, edges: IEdge[]): void {
+  //   this.adjacencyList[node] = edges;
+  // }
 
   /**
    * Calculate shortest paths for all nodes for the given start node.
    * @param startNode The start node.
    */
   calculateFor(startNode: number): ShortestPaths {
+    if (startNode < 0 || startNode >= this.nodes) {
+      throw new RangeError(
+        `startNode must be in range 0..${this.nodes - 1}: ${startNode}`,
+      );
+    }
+
     const weights: number[] = new Array(this.nodes).fill(Infinity);
     weights[startNode] = 0;
 
@@ -166,15 +173,15 @@ export class DijkstraShortestPathSolver {
     while (pq.length !== 0) {
       const shortestStep = pq.pop();
 
-      const currentNode = shortestStep!.toNode;
+      const currentNode: number = shortestStep!.toNode;
 
       for (const neighbor of this.adjacencyList[currentNode]) {
         const weight = weights[currentNode] + neighbor.weight;
-
-        if (weight < weights[neighbor.toNode]) {
-          weights[neighbor.toNode] = weight;
-          backtrace[neighbor.toNode] = currentNode;
-          pq.push({ toNode: neighbor.toNode, weight: weight });
+        const toNode = neighbor.toNode;
+        if (weight < weights[toNode]) {
+          weights[toNode] = weight;
+          backtrace[toNode] = currentNode;
+          pq.push({ toNode, weight });
         }
       }
     }
