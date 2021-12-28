@@ -18,11 +18,11 @@ Wikipedia.
 
 # Usage Hints
 
-Dijkstra's algorithm actually calculates the shortest path from the start node to every other node in the graph. This can let you cheaply do things like find the 20 closest nodes from a particular node in the graph. 
+Dijkstra's algorithm actually calculates the shortest paths from the start node to every other node in the graph. In other words, it isn't just calculating one path at a time. This can let you cheaply do things like find the 20 closest nodes from a particular node in the graph, for example. 
 
 You can reverse the direction of the calculation. Calling it "start node" is just a convention. It can also be an end node if you set up the graph correctly.
 
-This implementation supports cloning the solver and extending its graph dynamically. Graph generation can be expensive.. For many applications, most of the graph can be reused, with a only a small portion needing to be dynamic. 
+This implementation supports cloning the solver and extending its graph dynamically. Graph generation can be expensive. For many applications, most of the graph can be reused, with a only a small portion needing to be dynamic. 
 
 # Example
 
