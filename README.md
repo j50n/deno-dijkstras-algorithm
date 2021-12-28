@@ -2,17 +2,27 @@
 
 A pretty good implementation of Dijkstra's shortest-path algorithm for Deno.
 
-This implementation is able to process large in-memory graphs. It will perform
-reasonably well even when the number of edges is in the millions.
+If you run into a problem that can be represented a graph where the solution has something to do with finding the shortest path between nodes, this algorithm can be magical. It is well worth the time to learn how to use it.
+
+This implementation of Dijkstra'a algorithm is able to process large in-memory graphs. It will perform
+reasonably well even when the number of edges is in the millions. The performance is `O(n*log(n)).
 
 This code was adapted from Typescript/Deno from
 [A Walkthrough of Dijkstra's Algorithm (In JavaScript!)](https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026)
-on Medium. This code was originally part of
+on Medium. This implemetation was originally part of
 [BlackholeSuns](https://github.com/j50n/blackholesuns), an open source project
 that allowed thousands of No Man's Sky players to navigate the galaxy using
-mapped black holes. See also
+mapped black holes. This version is cleaned up a bit and includes a few bug fixes and more tests than the original. See also
 [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) on
 Wikipedia.
+
+# Usage Hints
+
+Dijkstra's algorithm actually calculates the shortest path from the start node to every other node in the graph. This can let you cheaply do things like find the 20 closest nodes from a particular node in the graph. 
+
+You can reverse the direction of the calculation. Calling it "start node" is just a convention. It can also be an end node if you set up the graph correctly.
+
+This implementation supports cloning the solver and extending its graph dynamically. Graph generation can be expensive.. For many applications, most of the graph can be reused, with a only a small portion needing to be dynamic. 
 
 # Example
 
