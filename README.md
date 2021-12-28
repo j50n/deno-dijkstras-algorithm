@@ -2,7 +2,7 @@
 
 A pretty good implementation of Dijkstra's shortest-path algorithm for Deno.
 
-If you ever run into a problem that can be represented as a graph where the solution has something to do with finding the shortest path between nodes, this algorithm is magical. It is well worth the time to learn how to use it.
+If you ever run into a problem that can be represented as a graph where the solution has something to do with finding the shortest path between nodes, this algorithm is nothing short of magical. It is well worth the time to learn how to use it, even if you don't really understand how the algorithm works.
 
 This implementation of Dijkstra'a algorithm is able to process large in-memory graphs. It will perform
 reasonably well even when the number of edges is in the millions. The performance is `O(n*log(n))`.
@@ -22,7 +22,7 @@ Dijkstra's algorithm actually calculates the shortest paths from the start node 
 
 You can reverse the direction of the calculation. Calling it "start node" is just a convention. It can also be an end node if you set up the graph correctly.
 
-This implementation supports cloning the solver and extending its graph dynamically. Graph generation can be expensive. For many applications, most of the graph can be reused, with a only a small portion needing to be dynamic. 
+This implementation supports cloning the solver and extending its graph dynamically. Graph generation can be expensive. For many cases, most of the graph can be reused, with a only a small portion needing to be dynamic.  
 
 # Example
 
