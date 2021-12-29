@@ -16,7 +16,7 @@ interface IPath {
   readonly weight: number;
 }
 
-interface NodeBag {
+interface INodeBag {
   readonly nodes: number;
 }
 
@@ -41,7 +41,7 @@ function checkWeight(weight: number): void {
  * as our priority queue. All map-likes have been eliminated, but there are still object references. So this is
  * not as fast as possible, but it should be plenty fast and not too heavy on memory.
  */
-export class DijkstraShortestPathSolver implements NodeBag {
+export class DijkstraShortestPathSolver implements INodeBag {
   private readonly startNodeChecker = new NodeIndexChecker(this, "startNode");
   private readonly fromNodeChecker = new NodeIndexChecker(this, "fromNode");
   private readonly toNodeChecker = new NodeIndexChecker(this, "toNode");
@@ -174,7 +174,7 @@ export class DijkstraShortestPathSolver implements NodeBag {
 /**
  * Shortest paths result.
  */
-export class ShortestPaths implements NodeBag {
+export class ShortestPaths implements INodeBag {
   private readonly endNodeChecker = new NodeIndexChecker(this, "endNode");
 
   constructor(
@@ -220,9 +220,9 @@ export class ShortestPaths implements NodeBag {
 /**
  * Simple range check for various node index inputs.
  */
-class NodeIndexChecker implements NodeBag {
+class NodeIndexChecker implements INodeBag {
   constructor(
-    private readonly nodeBag: NodeBag,
+    private readonly nodeBag: INodeBag,
     private readonly label: string,
   ) {
   }
