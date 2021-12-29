@@ -16,6 +16,16 @@ interface IPath {
   readonly weight: number;
 }
 
+interface NodeBag {
+  readonly nodes: number;
+}
+
+function checkWeight(weight: number): void {
+  if (weight < 0) {
+    throw new RangeError("weight must be >= 0");
+  }
+}
+
 /**
  * Implementation of Dijkstra's Shortest Path algorithm. This quickly finds the shortest path between a single point
  * and every other point it it connected to.
@@ -31,7 +41,11 @@ interface IPath {
  * as our priority queue. All map-likes have been eliminated, but there are still object references. So this is
  * not as fast as possible, but it should be plenty fast and not too heavy on memory.
  */
-export class DijkstraShortestPathSolver {
+export class DijkstraShortestPathSolver implements NodeBag {
+  private readonly startNodeChecker = new NodeIndexChecker(this, "startNode");
+  private readonly fromNodeChecker = new NodeIndexChecker(this, "fromNode");
+  private readonly toNodeChecker = new NodeIndexChecker(this, "toNode");
+
   private constructor(
     protected readonly adjacencyList: IEdge[][],
   ) {
@@ -70,7 +84,7 @@ export class DijkstraShortestPathSolver {
   /**
    * The number of nodes in the graph. Nodes are numbered from `0` to `n-1`.
    */
-  protected get nodes(): number {
+  get nodes(): number {
     return this.adjacencyList.length;
   }
 
@@ -98,21 +112,9 @@ export class DijkstraShortestPathSolver {
    * @param weight Weight of the edge. Must be greater than 0.
    */
   addEdge(fromNode: number, toNode: number, weight: number): void {
-    if (weight < 0) {
-      throw new RangeError("weight must be >= 0");
-    }
-
-    if (fromNode < 0 || fromNode >= this.nodes) {
-      throw new RangeError(
-        `fromNode must be in range 0..${this.nodes - 1}: ${fromNode}`,
-      );
-    }
-
-    if (toNode < 0 || toNode >= this.nodes) {
-      throw new RangeError(
-        `toNode must be in range 0..${this.nodes - 1}: ${toNode}`,
-      );
-    }
+    checkWeight(weight);
+    this.fromNodeChecker.check(fromNode);
+    this.toNodeChecker.check(toNode);
 
     this.adjacencyList[fromNode].push({ toNode, weight });
   }
@@ -124,41 +126,20 @@ export class DijkstraShortestPathSolver {
    * @param weight Weight of the edge. Must be greater than 0.
    */
   addBidirEdge(fromNode: number, toNode: number, weight: number): void {
-    if (weight < 0) {
-      throw new RangeError("weight must be >= 0");
-    }
-
-    if (fromNode < 0 || fromNode >= this.nodes) {
-      throw new RangeError(
-        `fromNode must be in range 0..${this.nodes - 1}: ${fromNode}`,
-      );
-    }
-
-    if (toNode < 0 || toNode >= this.nodes) {
-      throw new RangeError(
-        `toNode must be in range 0..${this.nodes - 1}: ${toNode}`,
-      );
-    }
+    checkWeight(weight);
+    this.fromNodeChecker.check(fromNode);
+    this.toNodeChecker.check(toNode);
 
     this.adjacencyList[fromNode].push({ toNode, weight });
     this.adjacencyList[toNode].push({ toNode: fromNode, weight });
   }
-
-  // TODO: Not ready for general consumption.
-  // setEdges(node: number, edges: IEdge[]): void {
-  //   this.adjacencyList[node] = edges;
-  // }
 
   /**
    * Calculate shortest paths for all nodes for the given start node.
    * @param startNode The start node.
    */
   calculateFor(startNode: number): ShortestPaths {
-    if (startNode < 0 || startNode >= this.nodes) {
-      throw new RangeError(
-        `startNode must be in range 0..${this.nodes - 1}: ${startNode}`,
-      );
-    }
+    this.startNodeChecker.check(startNode);
 
     const weights: number[] = new Array(this.nodes).fill(Infinity);
     weights[startNode] = 0;
@@ -193,7 +174,9 @@ export class DijkstraShortestPathSolver {
 /**
  * Shortest paths result.
  */
-export class ShortestPaths {
+export class ShortestPaths implements NodeBag {
+  private readonly endNodeChecker = new NodeIndexChecker(this, "endNode");
+
   constructor(
     public readonly nodes: number,
     public readonly startNode: number,
@@ -207,11 +190,7 @@ export class ShortestPaths {
    * @throws {@link Error} No path found.
    */
   shortestPathTo(endNode: number): number[] {
-    if (endNode < 0 || endNode >= this.nodes) {
-      throw new RangeError(
-        `end-node must be in range 0 to ${this.nodes - 1}: ${endNode}`,
-      );
-    }
+    this.endNodeChecker.check(endNode);
 
     const path = [endNode];
     let lastStep = endNode;
@@ -232,12 +211,35 @@ export class ShortestPaths {
    * @param endNode The end node.
    */
   weightOfPathTo(endNode: number): number {
-    if (endNode < 0 || endNode >= this.nodes) {
-      throw new RangeError(
-        `end-node must be in range 0 to ${this.nodes - 1}: ${endNode}`,
-      );
-    }
+    this.endNodeChecker.check(endNode);
 
     return this.weights[endNode];
+  }
+}
+
+/**
+ * Simple range check for various node index inputs.
+ */
+class NodeIndexChecker implements NodeBag {
+  constructor(
+    private readonly nodeBag: NodeBag,
+    private readonly label: string,
+  ) {
+  }
+
+  get nodes(): number {
+    return this.nodeBag.nodes;
+  }
+
+  check(index: number): void {
+    if (!Number.isInteger(index)) {
+      throw new RangeError(`${this.label} must be an integer: ${index}`);
+    }
+
+    if (index < 0 || index >= this.nodes) {
+      throw new RangeError(
+        `${this.label} must be in range 0..${this.nodes - 1}: ${index}`,
+      );
+    }
   }
 }
