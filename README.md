@@ -22,6 +22,18 @@ fixes and more tests than the original. See also
 [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) on
 Wikipedia.
 
+# Documentation
+
+```sh
+deno doc --reload https://deno.land/x/dijkstras_algorithm/dijkstra.ts
+```
+
+# Run Tests
+
+```sh
+deno test --reload
+```
+
 # Usage Hints
 
 Dijkstra's algorithm actually calculates the shortest paths from the start node
@@ -42,6 +54,8 @@ This example recreates the example from the article referenced earlier. The
 nodes are mapped to integers from `0` to `n-1`. The names and weights are taken
 from
 [A Walkthrough of Dijkstra's Algorithm (In JavaScript!)](https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026).
+
+![Example Graph](https://miro.medium.com/max/2400/1*lTVbpbmx3OWbKSWLp7M3ug.jpeg)
 
 ```ts
 const FULLSTACK = 0;
