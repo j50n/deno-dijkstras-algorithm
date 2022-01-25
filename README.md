@@ -3,15 +3,12 @@
 A fast and memory-efficient implementation of Dijkstra's shortest-path algorithm
 for Deno.
 
-If you ever run into a problem that can be represented as a graph where the
-solution has something to do with finding the shortest path between nodes, this
-algorithm is nothing short of magical. It is well worth the time to learn how to
-use it, even if you don't really understand how the algorithm works.
-
 This implementation of Dijkstra'a algorithm is able to process large in-memory
-graphs. It will perform reasonably well even when the number of edges is in the
-millions. The performance is `O(n*log(n))`, where `n` is proportional to the
-number of nodes plus the number of edges in the graph.
+graphs. It will perform reasonably well even with millions of edges. The
+performance is `O(n*log(n))`, where `n` is proportional to the number of nodes
+plus the number of edges in the graph. The use of integers to represent nodes in
+the graph is intentional and actually one of the keys to its performance and
+scalability.
 
 This code was adapted to Typescript from
 [A Walkthrough of Dijkstra's Algorithm (In JavaScript!)](https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026)
@@ -37,17 +34,15 @@ deno test --reload
 
 # Usage Hints
 
-Dijkstra's algorithm actually calculates the shortest paths from the start node
-to every other node in the graph. In other words, it isn't just calculating one
-path at a time. This can let you cheaply do things like find the 20 closest
-nodes from a particular node in the graph, for example.
+Dijkstra's algorithm calculates the shortest _paths_ from the start node to
+_all_ other nodes in the graph. All of them. In other words, it isn't just
+calculating one path at a time. This can let you cheaply do things like find the
+20 closest nodes from a particular node in the graph, for example.
 
-You can reverse the direction of the calculation. Calling it "start node" is
-just a convention. It can also be an end node if you set up the graph correctly.
-
-This implementation supports cloning the solver and extending its graph
-dynamically. Graph generation can be expensive. For many cases, most of the
-graph can be reused, with a only a small portion needing to be dynamic.
+One you have loaded a graph definition into a solver, you can clone it. You can
+then add nodes to the cloned graph. Loading a large graph over and over takes
+time, and depending on overhead, this can be even slower than calculating the
+shortest paths. This type of reuse lets you get super-fast results.
 
 # Example
 
