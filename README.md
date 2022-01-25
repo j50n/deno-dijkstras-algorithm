@@ -1,6 +1,7 @@
 # Dijkstra's Shortest Path Algorithm
 
-A pretty good implementation of Dijkstra's shortest-path algorithm for Deno.
+A fast and memory-efficient implementation of Dijkstra's shortest-path algorithm
+for Deno.
 
 If you ever run into a problem that can be represented as a graph where the
 solution has something to do with finding the shortest path between nodes, this
