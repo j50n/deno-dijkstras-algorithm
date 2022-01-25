@@ -38,8 +38,7 @@ function checkWeight(weight: number): void {
  *
  * Adapted from https://medium.com/@adriennetjohnson/a-walkthrough-of-dijkstras-algorithm-in-javascript-e94b74192026
  * This has been made much faster by treating nodes as an index rather than a string (name). We use `tinyqueue`
- * as our priority queue. All map-likes have been eliminated, but there are still object references. So this is
- * not as fast as possible, but it should be plenty fast and not too heavy on memory.
+ * as our priority queue. All map-likes have been eliminated. Should be plenty fast and not too heavy on memory.
  */
 export class DijkstraShortestPathSolver implements INodeBag {
   private readonly startNodeChecker = new NodeIndexChecker(this, "startNode");
